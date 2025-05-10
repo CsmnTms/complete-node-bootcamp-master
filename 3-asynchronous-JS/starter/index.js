@@ -19,22 +19,43 @@ const writeFilePromise = (file, data) => {
   });
 }
 
+// this is basically syntactic sugar for the promise chain
+// at least at the time of taking this course
+const getDogPic = async () => {
+  try 
+  {
+    const data = await readFilePromise(`${__dirname}/dog.txt`);
+    console.log(`Breed: ${data}`);
+
+    const response = await superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+    console.log(response.body.message);
+
+    const result = await writeFilePromise("dog-img.txt", response.body.message);
+    console.log(result);
+  } 
+  catch (err) 
+  {
+    console.log(err);
+  }
+};
+
+getDogPic();
+
 // notice the chain of promises
 // each promise returns another promise
 // so we can chain them together
-readFilePromise(`${__dirname}/dog.txt`)
-  .then(data => {
-    console.log(`Breed: ${data}`);
-    return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)
-  })
-  .then((response) => {
-    console.log(response.body.message);
-    return writeFilePromise("dog-img.txt", response.body.message);
-  })
-  .then(result => {
-    console.log(result);
-  })
-  .catch(err => {
-    console.log(err);
-  });
-
+// readFilePromise(`${__dirname}/dog.txt`)
+//   .then(data => {
+//     console.log(`Breed: ${data}`);
+//     return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)
+//   })
+//   .then((response) => {
+//     console.log(response.body.message);
+//     return writeFilePromise("dog-img.txt", response.body.message);
+//   })
+//   .then(result => {
+//     console.log(result);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });

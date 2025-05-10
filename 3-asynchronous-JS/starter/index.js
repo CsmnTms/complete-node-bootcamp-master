@@ -35,11 +35,39 @@ const getDogPic = async () => {
   } 
   catch (err) 
   {
-    console.log(err);
+    console.log("getDogPic internal error: ", err);
+    throw(err);
   }
+
+  return "2: DOG PIC WAS WRITTEN TO FILE!";
 };
 
-getDogPic();
+// this is a way to declare and call a unamed function
+// it's also obivously the async/await way to do it
+(async () => {
+  try   
+  {
+    console.log("1: Will get dog pics!");
+    let x = await getDogPic();
+    console.log(x); // this will log "2: READY!" only after the async function is done
+    console.log("3: Done getting dog pics!");
+  }
+  catch (err) 
+  {
+    console.log("error calling getDogPic - see internal error: ", err);
+  }
+})();
+
+// console.log("1: Will get dog pics!");
+// let x = getDogPic().then(x => {
+//   console.log(x); // this will log "2: READY!" only after the async function is done
+// }).catch(err => {
+//   console.log("error calling getDogPic - see internal error: ", err);
+// });
+// console.log(x); // this will log a promise, as it executes immediately after STARTING the async function
+// console.log("3: Done getting dog pics!");
+
+
 
 // notice the chain of promises
 // each promise returns another promise

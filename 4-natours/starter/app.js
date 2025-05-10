@@ -1,7 +1,14 @@
+// Core Node.js modules
 const fs = require('fs');
+
+// Third-party modules
 const express = require('express');
 
+// App startup
 const app = express();
+
+// Middleware
+app.use(express.json()); // parses incoming JSON requests and puts the parsed data in req.body, otherwise no body is received
 
 // app.get('/', (request, response) => {
 //   response.status(200).json({ message: 'Hello from the server!', app: 'Natours' });
@@ -17,10 +24,34 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
 app.get('/api/v1/tours', (request, response) => {
   response.status(200).json({
     status: 'success',
-    resultCount: toursObj.length,
+    resultCount: tours.length,
     data: {
       tours
     },
+  });
+});
+
+app.post('/api/v1/tours', (request, response) => {
+  // console.log(request.body);
+
+  const newId = tours[tours.length - 1].id + 1;
+  const newTour = Object.assign({ id: newId }, request.body);
+
+  tours.push(newTour);
+
+  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+    if (err) {
+      response.status(500).json({
+        status: 'fail',
+        message: 'Could not save data to file',
+      });
+    }
+    response.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour,
+      },
+    });
   });
 });
 

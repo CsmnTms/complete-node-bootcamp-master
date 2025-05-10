@@ -27,10 +27,21 @@ const getDogPic = async () => {
     const data = await readFilePromise(`${__dirname}/dog.txt`);
     console.log(`Breed: ${data}`);
 
-    const response = await superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
-    console.log(response.body.message);
+    // by removing the await, we now save the promise to this variable
+    const responsePromise1 = superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+    const responsePromise2 = superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+    const responsePromise3 = superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
 
-    const result = await writeFilePromise("dog-img.txt", response.body.message);
+    // exeucte all and get all the results as an array
+    const all = await Promise.all([responsePromise1, responsePromise2, responsePromise3]);
+    // console.log("<all> variable:", all); // bigass array of objects
+
+    const imgs = all.map(res => res.body.message);
+    console.log("imgs variable:", imgs);
+
+    // console.log(response.body.message);
+
+    const result = await writeFilePromise("dog-img.txt", imgs.join("\n"));
     console.log(result);
   } 
   catch (err) 

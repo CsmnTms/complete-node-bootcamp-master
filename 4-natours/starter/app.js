@@ -164,20 +164,24 @@ const deleteUser = (request, response) => {
 }
 
 // ROUTES
-app.route('/api/v1/tours') // routes are also underlyinh middlewares, i think
+const tourRouter = express.Router();
+const userRouter = express.Router();
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+tourRouter.route('/') // routes are also underlying middlewares, i think
   .get(getAllTours)
   .post(createTour);
-
-app.route('/api/v1/tours/:id')
+tourRouter.route('/:id')
   .get(getTour)
   .patch(patchTour)
-  .delete(deleteTour);
+  .delete(deleteTour)
 
-app.route('/api/v1/users')
+userRouter.route('/')
   .get(getAllUsers)
   .post(createUser);
-
-app.route('/api/v1/users/:id')
+userRouter.route('/:id')
   .get(getUser)
   .patch(patchUser)
   .delete(deleteUser);

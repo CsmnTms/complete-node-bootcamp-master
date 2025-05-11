@@ -3,12 +3,15 @@ const fs = require('fs');
 
 // Third-party modules
 const express = require('express');
+const morgan = require('morgan');
 
 // App startup
 const app = express();
 
 // Middleware
+app.use(morgan('dev')); // logging middleware, logs all requests to the console
 app.use(express.json()); // parses incoming JSON requests and puts the parsed data in req.body, otherwise no body is received
+
 app.use((request, response, next) => {
   console.log("Hello from the middleware");
   next(); // this is important, otherwise the request will hang
@@ -20,6 +23,7 @@ app.use((request, response, next) => {
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8'));
 
+// ROUTE HANDLERS
 const getAllTours = (request, response) => {
   console.log(request.requestTime);
   response.status(200).json({
@@ -128,13 +132,7 @@ const deleteTour = (request, response) => {
   });
 }
 
-// these are called route handlers:
-// app.get('/api/v1/tours', getAllTours);
-// app.get('/api/v1/tours/:id', getTour);
-// app.post('/api/v1/tours', createTour);
-// app.patch('/api/v1/tours/:id', patchTour);
-// app.delete('/api/v1/tours/:id', deleteTour);
-
+// ROUTES
 app.route('/api/v1/tours') // routes are also underlyinh middlewares, i think
   .get(getAllTours)
   .post(createTour);

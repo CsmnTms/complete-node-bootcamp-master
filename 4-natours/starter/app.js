@@ -12,6 +12,7 @@ const app = express();
 // Middlewares
 app.use(morgan('dev')); // logging middleware, logs all requests to the console
 app.use(express.json()); // parses incoming JSON requests and puts the parsed data in req.body, otherwise no body is received
+app.use(express.static(`${__dirname}/public`)); // serves static files from the public directory
 
 app.use((request, response, next) => {
   console.log("Hello from the middleware");

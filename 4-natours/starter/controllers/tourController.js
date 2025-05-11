@@ -13,6 +13,16 @@ exports.checkID = (request, response, next, val) => {
   next();
 }
 
+exports.checkBody = (request, response, next) => {
+  if (!request.body.name || !request.body.price) {
+    return response.status(400).json({
+      status: 'fail',
+      message: 'Missing name or price',
+    });
+  }
+  next();
+}
+
 exports.getAllTours = (request, response) => {
   console.log(request.requestTime);
   response.status(200).json({
@@ -38,8 +48,6 @@ exports.getTour = (request, response) => {
 }
 
 exports.createTour = (request, response) => {
-  // console.log(request.body);
-
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, request.body);
 

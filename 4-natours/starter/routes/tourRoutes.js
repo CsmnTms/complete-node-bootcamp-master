@@ -7,7 +7,7 @@ router.param('id', tourController.checkID); // this is a middleware that runs be
 
 router.route('/') // routes are also underlying middlewares, i think
   .get(tourController.getAllTours)
-  .post(tourController.createTour);
+  .post(tourController.checkBody, tourController.createTour);
 router.route('/:id')
   .get(tourController.getTour)
   .patch(tourController.patchTour)

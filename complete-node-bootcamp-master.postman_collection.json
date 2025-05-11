@@ -32,6 +32,14 @@
 			"response": []
 		},
 		{
+			"name": "Get Tour",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Tours",
 			"request": {
 				"method": "GET",
@@ -53,7 +61,7 @@
 			"response": []
 		},
 		{
-			"name": "Create New Tour",
+			"name": "Create Tour",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -71,6 +79,59 @@
 						"api",
 						"v1",
 						"tours"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Tour",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Test Tour69\",\r\n    \"duration\": 10,\r\n    \"difficulty\": \"easy\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:420/api/v1/tours/9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "420",
+					"path": [
+						"api",
+						"v1",
+						"tours",
+						"9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Tour",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:420/api/v1/tours/9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "420",
+					"path": [
+						"api",
+						"v1",
+						"tours",
+						"9"
 					]
 				}
 			},

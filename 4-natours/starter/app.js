@@ -104,6 +104,33 @@ app.patch('/api/v1/tours/:id', (request, response) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (request, response) => {
+  // console.log(request.params);
+  // console.log(request.body);
+
+  if (!tours[request.params.id]) {
+    return response.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  tours.splice(request.params.id, 1);
+
+  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+    if (err) {
+      response.status(500).json({
+        status: 'fail',
+        message: 'Could not save data to file',
+      });
+    }
+    response.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  });
+});
+
 const port = 420;
 app.listen(port, () => {
   console.log(`Server is running http://localhost:${port}...`);

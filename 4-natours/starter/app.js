@@ -16,7 +16,8 @@ const app = express();
 
 // MIDDLEWARES
 console.log(process.env.NODE_ENV); // this is the node process env vars
-if(process.env.NODE_ENV === 'development') {
+
+if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // logging middleware, logs all requests to the console
 }
 
@@ -37,5 +38,3 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 
 module.exports = app;
-
-

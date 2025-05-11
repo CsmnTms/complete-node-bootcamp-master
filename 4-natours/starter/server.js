@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
+
 dotenv.config({ path: './config.env' }); // this loads the env vars from the config.env file into process.env
-const app = require ('./app');
+const app = require('./app');
 
 // console.log("app.get('env'): :", app.get('env')); // this is the express app env mode (development, production, etc)
 // console.log(process.env); // this is the node process env vars

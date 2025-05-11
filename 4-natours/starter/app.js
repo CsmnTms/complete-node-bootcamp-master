@@ -132,6 +132,37 @@ const deleteTour = (request, response) => {
   });
 }
 
+const getAllUsers = (request, response) => { 
+  response.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+}
+const getUser = (request, response) => { 
+  response.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+}
+const createUser = (request, response) => { 
+  response.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+}
+const patchUser = (request, response) => { 
+  response.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+}
+const deleteUser = (request, response) => { 
+  response.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+}
+
 // ROUTES
 app.route('/api/v1/tours') // routes are also underlyinh middlewares, i think
   .get(getAllTours)
@@ -142,6 +173,16 @@ app.route('/api/v1/tours/:id')
   .patch(patchTour)
   .delete(deleteTour);
 
+app.route('/api/v1/users')
+  .get(getAllUsers)
+  .post(createUser);
+
+app.route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(patchUser)
+  .delete(deleteUser);
+
+// START SERVER
 const port = 420;
 app.listen(port, () => {
   console.log(`Server is running http://localhost:${port}...`);

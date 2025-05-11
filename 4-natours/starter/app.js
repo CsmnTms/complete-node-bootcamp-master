@@ -3,7 +3,6 @@ const fs = require('fs');
 
 // Third-party modules
 const express = require('express');
-const { get } = require('http');
 
 // App startup
 const app = express();
@@ -126,7 +125,7 @@ const deleteTour = (request, response) => {
 // app.patch('/api/v1/tours/:id', patchTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
 
-app.route('api/v1/tours')
+app.route('/api/v1/tours')
   .get(getAllTours)
   .post(createTour);
 

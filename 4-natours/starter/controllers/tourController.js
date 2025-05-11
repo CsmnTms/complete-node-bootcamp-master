@@ -2,6 +2,17 @@ const fs = require('fs');
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8'));
 
+exports.checkID = (request, response, next, val) => {
+  console.log(`Tour id is: ${val}`);
+  if (+request.params.id > tours.length - 1) {
+    return response.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next();
+}
+
 exports.getAllTours = (request, response) => {
   console.log(request.requestTime);
   response.status(200).json({
@@ -13,17 +24,10 @@ exports.getAllTours = (request, response) => {
     },
   });
 }
+
 exports.getTour = (request, response) => {
   console.log(request.params);
   const tour = tours.find(t => t.id === +request.params.id);
-
-  // if (+request.params.id > tours.length) {
-  if (!tour) {
-    return response.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
 
   response.status(200).json({
     status: 'success',
@@ -32,6 +36,7 @@ exports.getTour = (request, response) => {
     }
   });
 }
+
 exports.createTour = (request, response) => {
   // console.log(request.body);
 
@@ -55,17 +60,8 @@ exports.createTour = (request, response) => {
     });
   });
 }
+
 exports.patchTour = (request, response) => {
-  // console.log(request.params);
-  // console.log(request.body);
-
-  if (!tours[request.params.id]) {
-    return response.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   const updatedTour = Object.assign(tours[request.params.id], request.body);
 
   fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
@@ -83,16 +79,9 @@ exports.patchTour = (request, response) => {
     });
   });
 }
-exports.deleteTour = (request, response) => {
-  // console.log(request.params);
-  // console.log(request.body);
 
-  if (!tours[request.params.id]) {
-    return response.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
+exports.deleteTour = (request, response) => {
+
 
   tours.splice(request.params.id, 1);
 

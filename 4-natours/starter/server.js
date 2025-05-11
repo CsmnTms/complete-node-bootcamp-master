@@ -10,6 +10,24 @@ mongoose.connect(process.env.DATABASE).then(() => {
 // console.log("app.get('env'): :", app.get('env')); // this is the express app env mode (development, production, etc)
 // console.log(process.env); // this is the node process env vars
 
+const tourSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name'],
+    unique: true,
+  },
+  price: {
+    type: Number,
+    required: [true, 'A tour must have a price'],
+  },
+  rating: {
+    type: Number,
+    default: 4.5,
+  },
+});
+
+const Tour = mongoose.model('Tour', tourSchema);
+
 // START SERVER
 const port = process.env.PORT || 420;
 app.listen(port, () => {

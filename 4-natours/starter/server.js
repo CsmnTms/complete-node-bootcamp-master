@@ -1,7 +1,11 @@
-const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv'); dotenv.config({ path: './config.env' }); // this loads the env vars from the config.env file into process.env
 
-dotenv.config({ path: './config.env' }); // this loads the env vars from the config.env file into process.env
 const app = require('./app');
+
+mongoose.connect(process.env.DATABASE).then(() => {
+  console.log('DB connection successful!');
+});
 
 // console.log("app.get('env'): :", app.get('env')); // this is the express app env mode (development, production, etc)
 // console.log(process.env); // this is the node process env vars

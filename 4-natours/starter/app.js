@@ -20,7 +20,7 @@ app.use(express.json()); // parses incoming JSON requests and puts the parsed da
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8'));
 
-// this is called a route handler:
+// these are called route handlers:
 app.get('/api/v1/tours', (request, response) => {
   response.status(200).json({
     status: 'success',
@@ -42,7 +42,7 @@ app.get('/api/v1/tours/:id', (request, response) => {
       message: 'Invalid ID',
     });
   }
-  
+
   response.status(200).json({
     status: 'success',
     data: {
@@ -70,6 +70,35 @@ app.post('/api/v1/tours', (request, response) => {
       status: 'success',
       data: {
         tour: newTour,
+      },
+    });
+  });
+});
+
+app.patch('/api/v1/tours/:id', (request, response) => {
+  // console.log(request.params);
+  // console.log(request.body);
+
+  if (!tours[request.params.id]) {
+    return response.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  const updatedTour = Object.assign(tours[request.params.id], request.body);
+
+  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+    if (err) {
+      response.status(500).json({
+        status: 'fail',
+        message: 'Could not save data to file',
+      });
+    }
+    response.status(200).json({
+      status: 'success',
+      data: {
+        tour: updatedTour,
       },
     });
   });

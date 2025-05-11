@@ -9,12 +9,22 @@ const app = express();
 
 // Middleware
 app.use(express.json()); // parses incoming JSON requests and puts the parsed data in req.body, otherwise no body is received
+app.use((request, response, next) => {
+  console.log("Hello from the middleware");
+  next(); // this is important, otherwise the request will hang
+});
+app.use((request, response, next) => {
+  request.requestTime = new Date().toISOString();
+  next();
+});
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8'));
 
 const getAllTours = (request, response) => {
+  console.log(request.requestTime);
   response.status(200).json({
     status: 'success',
+    requestedAt: request.requestTime,
     resultCount: tours.length,
     data: {
       tours
@@ -125,7 +135,7 @@ const deleteTour = (request, response) => {
 // app.patch('/api/v1/tours/:id', patchTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
 
-app.route('/api/v1/tours')
+app.route('/api/v1/tours') // routes are also underlyinh middlewares, i think
   .get(getAllTours)
   .post(createTour);
 

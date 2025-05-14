@@ -6,6 +6,7 @@
 // Third-party modules
 import express, { json } from 'express';
 import { static as serveStatic } from 'express';
+import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -27,6 +28,8 @@ console.log(process.env.NODE_ENV); // this is the node process env vars
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // logging middleware, logs all requests to the console
 }
+
+app.use(bodyParser.json()); // parses incoming requests with JSON payloads
 
 app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory
 app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory

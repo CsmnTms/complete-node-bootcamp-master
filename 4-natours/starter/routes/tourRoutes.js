@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllTours, checkBody, createTour, getTour, patchTour, deleteTour } from '../controllers/tourController.js';
+import { getAllTours, createTour, getTour, patchTour, deleteTour } from '../controllers/tourController.js';
 
 const router = Router();
 
@@ -7,7 +7,7 @@ const router = Router();
 
 router.route('/') // routes are also underlying middlewares, i think
   .get(getAllTours)
-  .post(checkBody, createTour);
+  .post(createTour);
 router.route('/:id')
   .get(getTour)
   .patch(patchTour)

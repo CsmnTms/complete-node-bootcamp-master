@@ -1,16 +1,8 @@
 import Tour from '../models/tourModel.js';
 
-export function checkBody(request, response, next) {
-  if (!request.body.name || !request.body.price) {
-    return response.status(400).json({
-      status: 'fail',
-      message: 'Missing name or price',
-    });
-  }
-  next();
-}
+export { getAllTours, getTour, createTour, patchTour, deleteTour };
 
-export function getAllTours(request, response) {
+function getAllTours(request, response) {
   console.log(request.requestTime);
   response.status(200).json({
     status: 'success',
@@ -22,7 +14,7 @@ export function getAllTours(request, response) {
   });
 }
 
-export function getTour(request, response) {
+function getTour(request, response) {
   // const tour = tours.find(t => t.id === +request.params.id);
 
   // response.status(200).json({
@@ -33,16 +25,26 @@ export function getTour(request, response) {
   // });
 }
 
-export function createTour(request, response) {
-  response.status(201).json({
+async function createTour(request, response) {
+  try {
+    console.log(request.body);
+    const newTour = await Tour.create(request.body);
+
+    response.status(201).json({
       status: 'success',
-      // data: {
-      //   tour: newTour,
-      // },
+      data: {
+        tour: newTour,
+      },
     });
+  } catch (err) {
+    response.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 }
 
-export function patchTour(request, response) {
+function patchTour(request, response) {
   response.status(200).json({
     status: 'success',
     data: {
@@ -51,7 +53,7 @@ export function patchTour(request, response) {
   });
 }
 
-export function deleteTour(request, response) {
+function deleteTour(request, response) {
   response.status(204).json({
     status: 'success',
     data: null,

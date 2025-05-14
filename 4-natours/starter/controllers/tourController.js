@@ -2,27 +2,42 @@ import Tour from '../models/tourModel.js';
 
 export { getAllTours, getTour, createTour, patchTour, deleteTour };
 
-function getAllTours(request, response) {
-  console.log(request.requestTime);
-  response.status(200).json({
-    status: 'success',
-    requestedAt: request.requestTime,
-    // resultCount: tours.length,
-    // data: {
-    //   tours
-    // },
-  });
+async function getAllTours(request, response) {
+  try {
+    const tours = await Tour.find();
+
+    response.status(200).json({
+      status: 'success',
+      resultCount: tours.length,
+      data: {
+        tours
+      },
+    });
+  } catch (err) {
+    response.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 }
 
-function getTour(request, response) {
-  // const tour = tours.find(t => t.id === +request.params.id);
+async function getTour(request, response) {
+  try {
+    const tour = await Tour.findById(request.params.id);
+    // Tour.findOne({ _id: request.params.id }); // equivalent to the above
 
-  // response.status(200).json({
-  //   status: 'success',
-  //   data: {
-  //     tour
-  //   }
-  // });
+    response.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    response.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 }
 
 async function createTour(request, response) {

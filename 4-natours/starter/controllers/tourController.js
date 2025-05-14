@@ -59,18 +59,39 @@ async function createTour(request, response) {
   }
 }
 
-function patchTour(request, response) {
-  response.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated tour here...>',
-    },
-  });
+async function patchTour(request, response) {
+  try {
+    const tour = await Tour.findByIdAndUpdate(request.params.id, request.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    response.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    response.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 }
 
-function deleteTour(request, response) {
-  response.status(204).json({
-    status: 'success',
-    data: null,
-  });
+async function deleteTour(request, response) {
+  try {
+    await Tour.findByIdAndDelete(request.params.id);
+
+    response.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    response.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 }

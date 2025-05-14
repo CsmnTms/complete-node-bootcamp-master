@@ -1,14 +1,14 @@
-const express = require('express');
-const userController = require('../controllers/userController');
+import { Router } from 'express';
+import { getAllUsers, createUser, getUser, patchUser, deleteUser } from '../controllers/userController.js';
 
-const userRouter = express.Router();
+const userRouter = Router();
 
 userRouter.route('/')
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .get(getAllUsers)
+  .post(createUser);
 userRouter.route('/:id')
-  .get(userController.getUser)
-  .patch(userController.patchUser)
-  .delete(userController.deleteUser);
+  .get(getUser)
+  .patch(patchUser)
+  .delete(deleteUser);
 
-module.exports = userRouter;
+export default userRouter;

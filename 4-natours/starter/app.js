@@ -4,12 +4,19 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 // Third-party modules
-const express = require('express');
-const morgan = require('morgan');
+import express, { json } from 'express';
+import { static as serveStatic } from 'express';
+import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Define __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Local modules
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
+import tourRouter from './routes/tourRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 // App startup
 const app = express();
@@ -21,8 +28,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // logging middleware, logs all requests to the console
 }
 
-app.use(express.json()); // parses incoming JSON requests and puts the parsed data in req.body, otherwise no body is received
-app.use(express.static(`${__dirname}/public`)); // serves static files from the public directory
+app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory
+app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory
 
 app.use((request, response, next) => {
   // console.log("Hello from the middleware");
@@ -37,4 +44,4 @@ app.use((request, response, next) => {
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 
-module.exports = app;
+export default app;

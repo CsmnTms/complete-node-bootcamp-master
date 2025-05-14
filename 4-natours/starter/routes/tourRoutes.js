@@ -1,16 +1,16 @@
-const express = require('express');
-const tourController = require('../controllers/tourController');
+import { Router } from 'express';
+import { getAllTours, checkBody, createTour, getTour, patchTour, deleteTour } from '../controllers/tourController.js';
 
-const router = express.Router();
+const router = Router();
 
-router.param('id', tourController.checkID); // this is a middleware that runs before the route handler
+// router.param('id', checkID); // this is a middleware that runs before the route handler
 
 router.route('/') // routes are also underlying middlewares, i think
-  .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .get(getAllTours)
+  .post(checkBody, createTour);
 router.route('/:id')
-  .get(tourController.getTour)
-  .patch(tourController.patchTour)
-  .delete(tourController.deleteTour);
+  .get(getTour)
+  .patch(patchTour)
+  .delete(deleteTour);
 
-module.exports = router;
+export default router;

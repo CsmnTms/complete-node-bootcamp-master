@@ -1,3 +1,4 @@
+import qs from 'qs';
 import Tour from '../models/tourModel.js';
 
 export { getAllTours, getTour, createTour, patchTour, deleteTour };
@@ -5,13 +6,14 @@ export { getAllTours, getTour, createTour, patchTour, deleteTour };
 async function getAllTours(request, response) {
   try {
     // BUILD QUERY
-    const queryObj = { ...request.query };
-
+    const queryObj = qs.parse(request._parsedUrl.query);
     const excludedFields = ['page', 'sort', 'limit', 'fields']; 
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    const query = Tour.find(queryObj);
-    // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy'); 
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    const query = Tour.find(JSON.parse(queryStr));
 
     // EXECUTE QUERY
     const tours = await query

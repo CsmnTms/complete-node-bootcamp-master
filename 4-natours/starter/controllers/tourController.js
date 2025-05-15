@@ -24,6 +24,14 @@ async function getAllTours(request, response) {
       query.sort('-createdAt');
     }
 
+    // Field limiting
+    if (request.query.fields) {
+      const fields = request.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query.select('-__v');
+    }
+
     // EXECUTE QUERY
     const tours = await query
 

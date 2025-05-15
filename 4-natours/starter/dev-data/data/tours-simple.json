@@ -34,7 +34,7 @@
     "name": "The Snow Adventurer",
     "duration": 4,
     "maxGroupSize": 10,
-    "difficulty": "difficult",
+    "difficulty": "hard ;)",
     "ratingsAverage": 4.5,
     "ratingsQuantity": 13,
     "price": 997,
@@ -79,7 +79,7 @@
     "name": "The Sports Lover",
     "duration": 14,
     "maxGroupSize": 8,
-    "difficulty": "difficult",
+    "difficulty": "hard ;)",
     "ratingsAverage": 4.7,
     "ratingsQuantity": 28,
     "price": 2997,
@@ -133,6 +133,5 @@
     "imageCover": "tour-9-cover.jpg",
     "images": ["tour-9-1.jpg", "tour-9-2.jpg", "tour-9-3.jpg"],
     "startDates": ["2021-12-16,10:00", "2022-01-16,10:00", "2022-12-12,10:00"]
-  },
-  { "id": 9, "name": "Test Tour69", "duration": 10, "difficulty": "easy" }
+  }
 ]

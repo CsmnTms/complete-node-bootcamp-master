@@ -4,8 +4,19 @@ export { getAllTours, getTour, createTour, patchTour, deleteTour };
 
 async function getAllTours(request, response) {
   try {
-    const tours = await Tour.find();
+    // BUILD QUERY
+    const queryObj = { ...request.query };
 
+    const excludedFields = ['page', 'sort', 'limit', 'fields']; 
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    const query = Tour.find(queryObj);
+    // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy'); 
+
+    // EXECUTE QUERY
+    const tours = await query
+
+    // SEND RESPONSE
     response.status(200).json({
       status: 'success',
       resultCount: tours.length,

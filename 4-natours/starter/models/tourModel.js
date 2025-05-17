@@ -56,7 +56,11 @@ const tourSchema = new Schema({
     type: Date,
     default: Date.now()
   },
-  startDates: [Date]
+  startDates: [Date],
+  isSecret: {
+    type: Boolean,
+    default: false
+  },
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -81,6 +85,20 @@ tourSchema.pre('save', function(next) {
 //   console.log('Document saved:', doc);
 //   next();
 // });
+
+// QUERY MIDDLEWARE: runs pre- / post- .find() and .findOne()
+tourSchema.pre(/^find/, function(next) {
+  this.find({ isSecret: { $ne: true } });
+
+  this.start = Date.now();
+  next();
+});
+
+tourSchema.post(/^find/, function(docs, next) {
+  console.log('Query executed:', docs);
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+  next();
+});
 
 const Tour = model('Tour', tourSchema);
 

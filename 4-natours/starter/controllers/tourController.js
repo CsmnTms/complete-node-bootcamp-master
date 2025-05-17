@@ -1,7 +1,7 @@
 import qs from 'qs';
 import Tour from '../models/tourModel.js';
 
-export { getAllTours, getTour, createTour, patchTour, deleteTour };
+export { aliasTopTours, getAllTours, getTour, createTour, patchTour, deleteTour };
 
 async function getAllTours(request, response) {
   try {
@@ -17,29 +17,29 @@ async function getAllTours(request, response) {
     let query = Tour.find(JSON.parse(queryStr));
 
     // Sorting
-    if (request.query.sort) {
-      const sortBy = request.query.sort.split(',').join(' ');
+    if (request._parsedUrl.query.sort) {
+      const sortBy = request._parsedUrl.query.sort.split(',').join(' ');
       query = query.sort(sortBy);
     } else {
       query.sort('-createdAt');
     }
 
     // Field limiting / query projection
-    if (request.query.fields) {
-      const fields = request.query.fields.split(',').join(' ');
+    if (request._parsedUrl.query.fields) {
+      const fields = request._parsedUrl.query.fields.split(',').join(' ');
       query = query.select(fields);
     } else {
       query.select('-__v');
     }
 
     // Pagination
-    const page = request.query.page * 1 || 1;
-    const limit = +request.query.limit || 100;
+    const page = request._parsedUrl.query.page * 1 || 1;
+    const limit = +request._parsedUrl.query.limit || 100;
     const skip = (page - 1) * limit;
 
     query = query.skip(skip).limit(limit);  
 
-    if (request.query.page) {
+    if (request._parsedUrl.query.page) {
       const numTours = await Tour.countDocuments();
       if (skip >= numTours) throw new Error('This page does not exist');
     }
@@ -61,6 +61,18 @@ async function getAllTours(request, response) {
       message: err.message,
     });
   }
+}
+
+async function aliasTopTours(request, response, next) {
+  request._parsedUrl.query = request._parsedUrl.query || {};
+  request._parsedUrl.query.sort = '-ratingsAverage,price';
+  request._parsedUrl.query.limit = '5';
+  request._parsedUrl.query.fields = 'name,price,ratingsAverage,difficulty';
+
+  // console.log(request);
+  console.log(request._parsedUrl.query.sort);
+
+  next();
 }
 
 async function getTour(request, response) {

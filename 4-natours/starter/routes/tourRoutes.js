@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import { getAllTours, createTour, getTour, patchTour, deleteTour } from '../controllers/tourController.js';
+import { aliasTopTours, getAllTours, createTour, getTour, patchTour, deleteTour } from '../controllers/tourController.js';
 
 const router = Router();
 
-// router.param('id', checkID); // this is a middleware that runs before the route handler
+router.route('/top-5-cheap') // route aliasing
+  .get(aliasTopTours, getAllTours);
 
 router.route('/') // routes are also underlying middlewares, i think
   .get(getAllTours)
   .post(createTour);
+  
 router.route('/:id')
   .get(getTour)
   .patch(patchTour)

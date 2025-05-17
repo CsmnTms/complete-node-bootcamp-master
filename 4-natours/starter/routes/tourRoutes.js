@@ -1,18 +1,21 @@
 import { Router } from 'express';
-import { aliasTopTours, getAllTours, createTour, getTour, patchTour, deleteTour } from '../controllers/tourController.js';
+import * as tourController from '../controllers/tourController.js';
 
 const router = Router();
 
 router.route('/top-5-cheap') // route aliasing
-  .get(aliasTopTours, getAllTours);
+  .get(tourController.aliasTopTours, tourController.getAllTours);
+
+router.route('/stats') 
+  .get(tourController.getTourStats);
 
 router.route('/') // routes are also underlying middlewares, i think
-  .get(getAllTours)
-  .post(createTour);
+  .get(tourController.getAllTours)
+  .post(tourController.createTour);
   
 router.route('/:id')
-  .get(getTour)
-  .patch(patchTour)
-  .delete(deleteTour);
+  .get(tourController.getTour)
+  .patch(tourController.patchTour)
+  .delete(tourController.deleteTour);
 
 export default router;

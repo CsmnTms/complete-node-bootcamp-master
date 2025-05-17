@@ -1,9 +1,7 @@
 import Tour from '../models/tourModel.js';
 import { APIFeatures } from '../utils/apiFeatures.js';
 
-export { aliasTopTours, getAllTours, getTour, createTour, patchTour, deleteTour };
-
-async function getAllTours(request, response) {
+export async function getAllTours(request, response) {
   try {
     // EXECUTE QUERY
     const features = new APIFeatures(Tour.find(), request._parsedUrl.query)
@@ -30,7 +28,7 @@ async function getAllTours(request, response) {
   }
 }
 
-async function aliasTopTours(request, response, next) {
+export async function aliasTopTours(request, response, next) {
   request._parsedUrl.query = request._parsedUrl.query || {};
   request._parsedUrl.query.sort = '-ratingsAverage,price';
   request._parsedUrl.query.limit = '5';
@@ -41,7 +39,7 @@ async function aliasTopTours(request, response, next) {
   next();
 }
 
-async function getTour(request, response) {
+export async function getTour(request, response) {
   try {
     const tour = await Tour.findById(request.params.id);
     // Tour.findOne({ _id: request.params.id }); // equivalent to the above
@@ -60,7 +58,7 @@ async function getTour(request, response) {
   }
 }
 
-async function createTour(request, response) {
+export async function createTour(request, response) {
   try {
     const newTour = await Tour.create(request.body);
 
@@ -78,7 +76,7 @@ async function createTour(request, response) {
   }
 }
 
-async function patchTour(request, response) {
+export async function patchTour(request, response) {
   try {
     const tour = await Tour.findByIdAndUpdate(request.params.id, request.body, {
       new: true,
@@ -99,13 +97,53 @@ async function patchTour(request, response) {
   }
 }
 
-async function deleteTour(request, response) {
+export async function deleteTour(request, response) {
   try {
     await Tour.findByIdAndDelete(request.params.id);
 
     response.status(204).json({
       status: 'success',
       data: null,
+    });
+  } catch (err) {
+    response.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+}
+
+export async function getTourStats(request, response) {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match : { ratingsAverage: { $gte: 4.5 } }
+      },
+      {
+        $group: {
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+
+        }
+      },
+      {
+        $sort: { avgPrice: 1 }
+      },
+      // {
+      //   $match: { _id: { $ne: 'EASY' } }
+      // }
+    ]);
+
+    response.status(200).json({
+      status: 'success',
+      data: {
+        stats
+      }
     });
   } catch (err) {
     response.status(400).json({

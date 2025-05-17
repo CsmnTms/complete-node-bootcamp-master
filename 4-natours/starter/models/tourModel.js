@@ -95,8 +95,15 @@ tourSchema.pre(/^find/, function(next) {
 });
 
 tourSchema.post(/^find/, function(docs, next) {
-  console.log('Query executed:', docs);
+  // console.log('Query executed:', docs);
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+  next();
+});
+
+// AGGREGATION MIDDLEWARE: runs pre- / post- .aggregate()
+tourSchema.pre('aggregate', function(next) {
+  this.pipeline().unshift({ $match: { isSecret: { $ne: true } } });
+  console.log(this.pipeline());
   next();
 });
 

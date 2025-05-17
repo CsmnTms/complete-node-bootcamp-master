@@ -9,6 +9,9 @@ router.route('/top-5-cheap') // route aliasing
 router.route('/stats') 
   .get(tourController.getTourStats);
 
+  router.route('/monthly-plan/:year')
+  .get(tourController.getMonthlyPlan);
+
 router.route('/') // routes are also underlying middlewares, i think
   .get(tourController.getAllTours)
   .post(tourController.createTour);

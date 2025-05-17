@@ -21,7 +21,7 @@ export class APIFeatures {
   }
 
   sort() {
-    if (this.queryString.sort) {
+    if (this.queryString?.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
@@ -32,8 +32,9 @@ export class APIFeatures {
   }
 
   limitFields() {
-    if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(',').join(' ');
+    let queryStr = qs.parse(this.queryString)
+    if (queryStr?.fields) {
+      const fields = queryStr.fields.split(',').join(' ');
       this.query = this.query.select(fields);
     } else {
       this.query.select('-__v');

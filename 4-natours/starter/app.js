@@ -23,7 +23,7 @@ import userRouter from './routes/userRoutes.js';
 const app = express();
 
 // MIDDLEWARES
-console.log(process.env.NODE_ENV); // this is the node process env vars
+console.log(`///^^^^^^^^^^^^^^^^^^^^^^^^^^^ App mode: ${process.env.NODE_ENV.toUpperCase()} ^^^^^^^^^^^^^^^^^^^^^^^^^^^///`); // this is the node process env vars
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // logging middleware, logs all requests to the console

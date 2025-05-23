@@ -45,9 +45,24 @@ app.use('/api/v1/tours', tourRouter);
 
 // Catch all unhandled routes, has to be last middleware
 app.use((request, response, next) => {
-  response.status(404).json({
-    status: 'fail',
-    message: `Cannot find ${request.originalUrl} on this server!`,
+  // response.status(404).json({
+  //   status: 'fail',
+  //   message: `Cannot find ${request.originalUrl} on this server!`,
+  // }); 
+  const error = new Error(`Cannot find ${request.originalUrl} on this server!`);
+  error.statusCode = 404;
+  error.status = 'fail';
+  next(error);
+});
+
+// Global error handling middleware
+app.use((error, request, response, next) => {
+  error.statusCode = error.statusCode || 500;
+  error.status = error.status || 'error';
+
+  response.status(error.statusCode).json({
+    status: error.status,
+    message: error.message,
   });
 });
 

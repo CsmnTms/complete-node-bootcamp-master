@@ -35,10 +35,6 @@ app.use(serveStatic(`${__dirname}/public`)); // serves static files from the pub
 app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory
 
 app.use((request, response, next) => {
-  // console.log("Hello from the middleware");
-  next(); // this is important, otherwise the request will hang
-});
-app.use((request, response, next) => {
   request.requestTime = new Date().toISOString();
   next();
 });
@@ -46,5 +42,13 @@ app.use((request, response, next) => {
 // ROUTES (route mounting)
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
+
+// Catch all unhandled routes, has to be last middleware
+app.use((request, response, next) => {
+  response.status(404).json({
+    status: 'fail',
+    message: `Cannot find ${request.originalUrl} on this server!`,
+  });
+});
 
 export default app;

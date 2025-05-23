@@ -4,8 +4,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 // Third-party modules
-import express, { json } from 'express';
-import { static as serveStatic } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import path from 'path';
@@ -16,6 +15,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Local modules
+import {AppError} from './utils/appError.js';
+import {errorHandler} from './controllers/errorController.js';
 import tourRouter from './routes/tourRoutes.js';
 import userRouter from './routes/userRoutes.js';
 
@@ -31,8 +32,8 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(bodyParser.json()); // parses incoming requests with JSON payloads
 
-app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory
-app.use(serveStatic(`${__dirname}/public`)); // serves static files from the public directory
+app.use(express.static(`${__dirname}/public`)); // serves static files from the public directory
+app.use(express.static(`${__dirname}/public`)); // serves static files from the public directory
 
 app.use((request, response, next) => {
   request.requestTime = new Date().toISOString();
@@ -45,25 +46,10 @@ app.use('/api/v1/tours', tourRouter);
 
 // Catch all unhandled routes, has to be last middleware
 app.use((request, response, next) => {
-  // response.status(404).json({
-  //   status: 'fail',
-  //   message: `Cannot find ${request.originalUrl} on this server!`,
-  // }); 
-  const error = new Error(`Cannot find ${request.originalUrl} on this server!`);
-  error.statusCode = 404;
-  error.status = 'fail';
-  next(error);
+  next(new AppError(`Can't find ${request.originalUrl} on this server!`, 404));
 });
 
 // Global error handling middleware
-app.use((error, request, response, next) => {
-  error.statusCode = error.statusCode || 500;
-  error.status = error.status || 'error';
-
-  response.status(error.statusCode).json({
-    status: error.status,
-    message: error.message,
-  });
-});
+app.use(errorHandler);
 
 export default app;
